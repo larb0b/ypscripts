@@ -1,0 +1,13 @@
+#!/bin/ksh
+#
+# Adds a group to $YPFILES/group
+# ypaddgroupgroup
+#
+
+. ./ypconf
+
+gid="$(($(tail -1 ${YPFILES}/group | cut -d : -f3)+1))"
+
+echo "${1}::${gid}:" >> "${YPFILES}"/group
+
+ypmake

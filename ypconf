@@ -1,0 +1,8 @@
+YPFILES=/etc/ypfiles
+HOMES=/export/home
+PATH=$PATH:/usr/ccs/bin:/usr/sfw/bin
+
+ypmake() {
+	cd /var/yp
+	make
+}

@@ -1,0 +1,25 @@
+#!/bin/ksh
+#
+# Adds a user to $YPFILES/passwd
+# ypadduser username password group
+#
+
+. ./ypconf
+
+uid="$(($(tail -1 ${YPFILES}/passwd | cut -d : -f3)+1))"
+
+passwd="$(openssl passwd -crypt ${2})"
+gidline="$(grep -n ${3}: ${YPFILES}/group | cut -d':' -f1)"
+gid="$(sed ${gidline}!d ${YPFILES}/group | cut -d':' -f3)"
+
+echo "${1}:##${1}:${uid}:${gid}::/home/${1}:/bin/ksh" >> "${YPFILES}"/passwd
+echo "${1}:*:::::" >> "${YPFILES}"/passwd.adjunct
+echo "${1}:${passwd}:::::" >> "${YPFILES}"/shadow
+sed "${gidline}s/$/,${1}/" "${YPFILES}"/group > "${YPFILES}"/group.tmp
+mv "${YPFILES}"/group.tmp "${YPFILES}"/group
+
+mkdir -p "${HOMES}/${1}"
+cp /etc/skel/* "${HOMES}/${1}"
+chown -R "${uid}:${gid}" "${HOMES}/${1}"
+
+ypmake
