@@ -1,0 +1,20 @@
+#!/bin/ksh
+#
+# Adds an initial yp user and group
+# ypinitial username password group
+#
+
+. $(dirname "$0")/ypconf
+
+passwd="$(openssl passwd -crypt ${2})"
+
+echo "${1}:##${1}:${INITIALUID}:${INITIALGID}::/home/${1}:/bin/ksh" > "${YPFILES}"/passwd
+echo "${1}:*:::::" > "${YPFILES}"/passwd.adjunct
+echo "${1}:${passwd}:::::" > "${YPFILES}"/shadow
+echo "${3}::${INITIALGID}:${1}" > "${YPFILES}"/group
+
+mkdir -p "${HOMES}/${1}"
+cp /etc/skel/* "${HOMES}/${1}"
+chown -R "${INITIALUID}:${INITIALGID}" "${HOMES}/${1}"
+
+ypmake
