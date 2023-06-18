@@ -4,7 +4,7 @@
 # ypadduser username group
 #
 
-. ./ypconf
+. $(dirname "$0")/ypconf
 
 groupline="$(grep -n ${2}: ${YPFILES}/group | cut -d':' -f1)"
 

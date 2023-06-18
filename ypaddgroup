@@ -4,7 +4,7 @@
 # ypaddgroupgroup
 #
 
-. ./ypconf
+. $(dirname "$0")/ypconf
 
 gid="$(($(tail -1 ${YPFILES}/group | cut -d : -f3)+1))"
 
