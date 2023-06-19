@@ -1,14 +1,23 @@
 #!/bin/ksh
 #
 # Adds a user to yp group
-# ypadduser username group
+# ypaddtogroup username group
 #
 
 . $(dirname "$0")/ypconf
 
 groupline="$(grep -n ${2}: ${YPFILES}/group | cut -d':' -f1)"
+group="$(sed ${groupline}'!d' ${YPFILES}/group)"
 
-sed "${groupline}s/$/,${1}/" "${YPFILES}"/group > "${YPFILES}"/group.tmp
+# If group doesn't have a user yet, don't prefix with a comma
+case "${group}" in
+	*:)
+		sed "${groupline}s/$/${1}/" "${YPFILES}"/group > "${YPFILES}"/group.tmp
+		;;
+	*:*)
+		sed "${groupline}s/$/,${1}/" "${YPFILES}"/group > "${YPFILES}"/group.tmp
+		;;
+esac
 mv "${YPFILES}"/group.tmp "${YPFILES}"/group
 
 ypmake
