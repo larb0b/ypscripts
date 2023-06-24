@@ -29,6 +29,7 @@ esac
 mv "${YPFILES}"/group.tmp "${YPFILES}"/group
 
 mkdir -p "${HOMES}/${1}"
+chmod 700 "${HOMES}/${1}"
 cp /etc/skel/* "${HOMES}/${1}"
 chown -R "${uid}:${gid}" "${HOMES}/${1}"
 

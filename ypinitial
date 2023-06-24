@@ -14,6 +14,7 @@ echo "${1}:${passwd}:::::" > "${YPFILES}"/shadow
 echo "${3}::${INITIALGID}:${1}" > "${YPFILES}"/group
 
 mkdir -p "${HOMES}/${1}"
+chmod 700 "${HOMES}/${1}"
 cp /etc/skel/* "${HOMES}/${1}"
 chown -R "${INITIALUID}:${INITIALGID}" "${HOMES}/${1}"
 
